@@ -12,7 +12,7 @@ public class Paddle : MonoBehaviour
     private void Awake()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
-        Debug.Log(rigidbody2D);
+        // Debug.Log(rigidbody2D);
     }
 
     void Update()

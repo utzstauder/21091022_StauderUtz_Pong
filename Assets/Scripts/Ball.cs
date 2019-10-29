@@ -42,7 +42,8 @@ public class Ball : MonoBehaviour
             if (deltaPos > 0)
             {
                 deltaPos -= collision.otherCollider.bounds.extents.y;
-            } else if (deltaPos < 0)
+            }
+            else if (deltaPos < 0)
             {
                 deltaPos -= collision.otherCollider.bounds.extents.y;
             }
@@ -64,6 +65,17 @@ public class Ball : MonoBehaviour
 
             rigidbody2D.velocity *= speedMultiplier;
             Debug.Log("velocity: " + rigidbody2D.velocity.magnitude);
+        }else
+        {
+            // TODO: fix vertical ball bounce
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Respawn"))
+        {
+            ResetBall();
         }
     }
 
