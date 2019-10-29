@@ -9,6 +9,15 @@ public class GameController : MonoBehaviour
 
     public int scoreToWin = 3;
 
+
+
+    bool playing = false;
+    public bool IsPlaying { get { return playing; } }
+
+    public delegate void gameStateChangeDelegate(bool playing);
+    public event gameStateChangeDelegate OnGameStateChanged;
+
+
     private void Awake()
     {
         if (goalPlayerOne == null
@@ -19,16 +28,28 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        OnGameStateChanged?.Invoke(playing);
+    }
+
     private void Update()
     {
-        if (goalPlayerOne.Score >= scoreToWin)
+        if (playing)
         {
-            // P1 won
-            Debug.Log("P1 won!");
-        } else if (goalPlayerTwo.Score >= scoreToWin)
+            if (goalPlayerOne.Score >= scoreToWin
+            ||  goalPlayerTwo.Score >= scoreToWin)
+            {
+                playing = false;
+                OnGameStateChanged?.Invoke(playing);
+            }
+        } else 
         {
-            // P2 won
-            Debug.Log("P2 won!");
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                playing = true;
+                OnGameStateChanged?.Invoke(playing);
+            }
         }
     }
 }

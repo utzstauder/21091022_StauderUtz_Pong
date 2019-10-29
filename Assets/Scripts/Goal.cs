@@ -14,11 +14,6 @@ public class Goal : MonoBehaviour
         }
     }
 
-    public int GetScore()
-    {
-        return score;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         score++;

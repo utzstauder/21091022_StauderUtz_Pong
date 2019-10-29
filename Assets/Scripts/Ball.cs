@@ -12,20 +12,25 @@ public class Ball : MonoBehaviour
     public float deviationFactor = 2;
 
     Rigidbody2D rigidbody2D;
+    GameController gameController;
 
     private void Awake()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        gameController = GameObject.FindObjectOfType<GameController>();
+        if (gameController != null)
+        {
+            gameController.OnGameStateChanged += GameController_OnGameStateChanged;
+        }
     }
 
-    private void Start()
+    private void GameController_OnGameStateChanged(bool playing)
     {
-        ResetBall();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Return))
+        Debug.Log(gameObject.name + ": event received");
+        if (playing)
+        {
+            StartBall();
+        } else
         {
             ResetBall();
         }
@@ -53,7 +58,7 @@ public class Ball : MonoBehaviour
             // Debug.Log("paddleWidth: " + paddleWidth);
 
             float normalizedDeltaPos = deltaPos / paddleWidth;
-            Debug.Log("normalizedDeltaPos: " + normalizedDeltaPos);
+            // Debug.Log("normalizedDeltaPos: " + normalizedDeltaPos);
 
             float vTemp = rigidbody2D.velocity.magnitude;
 
@@ -64,7 +69,7 @@ public class Ball : MonoBehaviour
             rigidbody2D.velocity = rigidbody2D.velocity.normalized * vTemp;
 
             rigidbody2D.velocity *= speedMultiplier;
-            Debug.Log("velocity: " + rigidbody2D.velocity.magnitude);
+            // Debug.Log("velocity: " + rigidbody2D.velocity.magnitude);
         }else
         {
             // TODO: fix vertical ball bounce
@@ -76,6 +81,7 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.CompareTag("Respawn"))
         {
             ResetBall();
+            StartBall();
         }
     }
 
@@ -84,6 +90,12 @@ public class Ball : MonoBehaviour
         // reset ball position
         transform.position = Vector3.zero;
 
+        // remove ball speed
+        rigidbody2D.velocity = Vector2.zero;
+    }
+
+    void StartBall()
+    {
         // set initial speed
         rigidbody2D.velocity = initialSpeed * Random.insideUnitCircle.normalized;
     }
