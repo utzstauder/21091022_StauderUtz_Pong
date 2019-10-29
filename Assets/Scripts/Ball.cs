@@ -8,6 +8,8 @@ public class Ball : MonoBehaviour
 
     [Range(1.01f, 1.25f)]
     public float speedMultiplier = 1.01f;
+    [Range(0, 3f)]
+    public float deviationFactor = 2;
 
     Rigidbody2D rigidbody2D;
 
@@ -31,22 +33,38 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //Debug.Log(collision.gameObject.name);
-
         if (collision.gameObject.CompareTag("Player"))
         {
-            rigidbody2D.velocity *= speedMultiplier;
-            Debug.Log(rigidbody2D.velocity.magnitude);
-        }
+            Vector3 ballPos = transform.position;
+            Vector3 paddlePos = collision.transform.position;
 
-        //// look for Paddle component on colliding GameObject
-        //Paddle paddle = collision.gameObject.GetComponent<Paddle>();
-        //// Debug.Log(paddle);
-        //if (paddle != null)
-        //{
-        //    rigidbody2D.velocity *= speedMultiplier;
-        //    Debug.Log(rigidbody2D.velocity.magnitude);
-        //}
+            float deltaPos = ballPos.y - paddlePos.y;
+            if (deltaPos > 0)
+            {
+                deltaPos -= collision.otherCollider.bounds.extents.y;
+            } else if (deltaPos < 0)
+            {
+                deltaPos -= collision.otherCollider.bounds.extents.y;
+            }
+            // Debug.Log("deltaPos: " + deltaPos);
+
+            float paddleWidth = collision.transform.localScale.x * collision.collider.bounds.size.x;
+            // Debug.Log("paddleWidth: " + paddleWidth);
+
+            float normalizedDeltaPos = deltaPos / paddleWidth;
+            Debug.Log("normalizedDeltaPos: " + normalizedDeltaPos);
+
+            float vTemp = rigidbody2D.velocity.magnitude;
+
+            float newY = rigidbody2D.velocity.y;
+            newY += normalizedDeltaPos * deviationFactor;
+            rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, newY);
+
+            rigidbody2D.velocity = rigidbody2D.velocity.normalized * vTemp;
+
+            rigidbody2D.velocity *= speedMultiplier;
+            Debug.Log("velocity: " + rigidbody2D.velocity.magnitude);
+        }
     }
 
     private void ResetBall()
