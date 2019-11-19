@@ -24,7 +24,7 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private void GameController_OnGameStateChanged(bool playing)
+    private void GameController_OnGameStateChanged(bool playing, int winningPlayerId)
     {
         Debug.Log(gameObject.name + ": event received");
         if (playing)

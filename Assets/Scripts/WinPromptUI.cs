@@ -2,50 +2,48 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Goal : MonoBehaviour
+public class WinPromptUI : MonoBehaviour
 {
-    int score = 0;
-
-    public int Score
-    {
-        get
-        {
-            return score;
-        }
-    }
-
-    public event System.Action<int> OnScoreChanged;
-
+    Text textComponent;
     GameController gameController;
 
     private void Awake()
     {
+        textComponent = GetComponent<Text>();
+
         gameController = GameObject.FindObjectOfType<GameController>();
         if (gameController != null)
         {
             gameController.OnGameStateChanged += GameController_OnGameStateChanged;
         }
+
+        HidePrompt();
     }
 
     private void GameController_OnGameStateChanged(bool playing, int winningPlayerId)
     {
         if (playing)
         {
-            ResetScore();
+            HidePrompt();
+        }else
+        {
+            if (winningPlayerId > 0)
+            {
+                ShowPrompt(winningPlayerId);
+            }
         }
     }
 
-    void ResetScore()
+    void ShowPrompt(int playerId)
     {
-        score = 0;
-        OnScoreChanged?.Invoke(score);
+        textComponent.text = "Player " + playerId + " wins!";
+        textComponent.enabled = true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void HidePrompt()
     {
-        score++;
-        OnScoreChanged?.Invoke(score);
-        Debug.Log(gameObject.name + ": " + score);
+        textComponent.enabled = false;
     }
 }
