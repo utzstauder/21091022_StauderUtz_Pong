@@ -21,16 +21,19 @@ public class ScoreUI : MonoBehaviour
         {
             Debug.LogError("Please assign a Goal reference.");
             enabled = false;
+        } else
+        {
+            goalRef.OnScoreChanged += GoalRef_OnScoreChanged;
         }
+    }
+
+    private void GoalRef_OnScoreChanged(int newScore)
+    {
+        textRef.text = "" + newScore;
     }
 
     private void Start()
     {
         textRef.text = "0";
-    }
-
-    private void Update()
-    {
-        textRef.text = "" + goalRef.Score;
     }
 }

@@ -14,9 +14,12 @@ public class Goal : MonoBehaviour
         }
     }
 
+    public event System.Action<int> OnScoreChanged;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         score++;
+        OnScoreChanged?.Invoke(score);
         Debug.Log(gameObject.name + ": " + score);
     }
 }

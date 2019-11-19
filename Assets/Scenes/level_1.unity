@@ -1158,5 +1158,10 @@ PrefabInstance:
       propertyPath: goalPlayerOne
       value: 
       objectReference: {fileID: 1074480729}
+    - target: {fileID: 3686269015080083582, guid: 4629b9885d38f2846b5e6c5ca68de5ca,
+        type: 3}
+      propertyPath: scoreToWin
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4629b9885d38f2846b5e6c5ca68de5ca, type: 3}
